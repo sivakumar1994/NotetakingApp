@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">NotetakingApp</string>
+    <string name="setting">Setting</string>
+    <string name="home_screen_title">Notes</string>
+    <string name="none">none</string>
+    <string name="notes_title">Title</string>
+    <string name="notes">Note</string>
+    <string name="add_image">Add Image</string>
+    <string name="pin">Pin</string>
+    <string name="share">Share</string>
+    <string name="delete">Delete</string>
+    <string name="permission_not_granted">Permission Not Granted</string>
+    <string name="select_capture_image">Please Capture Image</string>
+    <string name="some_err">Error occur please try again later</string>
+    <string name="file_provider_name" >.fileProvider</string>
+
 </resources>
