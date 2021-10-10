@@ -11,6 +11,9 @@ abstract class NotesDao :BaseDao<NoteDetail> {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun updateNotesDetails(noteDetail: NoteDetail)
 
+    @Query("UPDATE ${Constants.NEW_NOTE_CREATION} SET isPinned =:isPinEnable WHERE id =:id")
+    abstract suspend fun updatePinStatus(id : Long, isPinEnable: Boolean)
+
     @Query("SELECT * FROM ${Constants.NEW_NOTE_CREATION}")
     abstract suspend fun fetchAllNotesDetails():List<NoteDetail>
 
@@ -21,5 +24,5 @@ abstract class NotesDao :BaseDao<NoteDetail> {
     abstract suspend fun fetchSpecificNotesDetails(id: Long):NoteDetail
 
     @Query("DELETE FROM ${Constants.NEW_NOTE_CREATION} WHERE id=:id ")
-    abstract suspend fun deleteNotesDetail(id:Int)
+    abstract suspend fun deleteNotesDetail(id:Long)
 }

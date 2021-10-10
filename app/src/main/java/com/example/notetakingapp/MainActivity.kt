@@ -49,9 +49,9 @@ class MainActivity : AppCompatActivity() {
 
     private var navController: NavController? = null
 
-    lateinit var mainActivityViewModel : MainActivityViewModel
+    lateinit var mainActivityViewModel: MainActivityViewModel
 
-    lateinit var popupMenu : PopupMenu
+    lateinit var popupMenu: PopupMenu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +68,12 @@ class MainActivity : AppCompatActivity() {
         popupMenu = PopupMenu(this@MainActivity, img_save)
         popupMenu.getMenuInflater().inflate(R.menu.menu_main, popupMenu.getMenu())
         setForceShowIcon(popupMenu)
+        initViewModel()
+        setObserver()
         img_add.setOnClickListener {
+            mainActivityViewModel.specificNoteData.value = null
+            mainActivityViewModel.imageUriForLoadImage.value = null
+            mainActivityViewModel.isSaveButtonClicked.value = false
             navController!!.navigate(R.id.notesDetailsFragmentDest)
             img_save.visibility = View.VISIBLE
             img_add.visibility = View.GONE
@@ -83,29 +88,72 @@ class MainActivity : AppCompatActivity() {
                     // Toast.makeText(this@MainActivity, item.title, Toast.LENGTH_SHORT).show()
                     checkCameraAndStoragePermission();
                 }
+                R.id.action_delete -> {
+                    img_save.visibility = View.GONE
+                    img_add.visibility = View.VISIBLE
+                    img_more.visibility = View.GONE
+                    mainActivityViewModel.isDeleteButtonClicked.value = true
+                }
+                R.id.action_pin -> {
+                    mainActivityViewModel.isPinButtomClicked.value = true;
+                }
             }
             true
         }
 
-        initViewModel()
-        setObserver()
-
         img_save.setOnClickListener {
-            mainActivityViewModel.isSaveButtonClicked.value =true
+            mainActivityViewModel.isSaveButtonClicked.value = true
             img_save.visibility = View.GONE
             img_add.visibility = View.VISIBLE
             img_more.visibility = View.GONE
+        }
+        img_pin.setOnClickListener {
+            mainActivityViewModel.isMainMenuPinButtomClicked.value = true
+            showMainMenuToolbatOption()
+        }
+        img_close.setOnClickListener {
+            mainActivityViewModel.getNotesDetail()
+            mainActivityViewModel.getPinnedNotesDetail(true)
+            showMainMenuToolbatOption()
+        }
+        img_delete_white.setOnClickListener {
+            mainActivityViewModel.isMainMenuDeleteButtonClicked.value = true
+            showMainMenuToolbatOption()
         }
 
     }
 
     private fun setObserver() {
-       mainActivityViewModel.isNoteAdapterItemClicked.observe(this,{
-           img_save.visibility = View.VISIBLE
-           img_add.visibility = View.GONE
-           img_more.visibility = View.VISIBLE
-           mainActivityViewModel.isSaveButtonClicked.value = false
-       })
+        mainActivityViewModel.isNoteAdapterItemClicked.observe(this, {
+            img_save.visibility = View.VISIBLE
+            img_add.visibility = View.GONE
+            img_more.visibility = View.VISIBLE
+            mainActivityViewModel.isSaveButtonClicked.value = false
+        })
+        mainActivityViewModel.isNeedToShowLongPressEventToolbar.observe(this, {
+            if (it) {
+                showLongPressToolbarOption()
+            }
+            else {
+                showMainMenuToolbatOption()
+            }
+        })
+    }
+
+    fun showLongPressToolbarOption() {
+        img_pin.visibility = View.VISIBLE
+        img_close.visibility = View.VISIBLE
+        img_delete_white.visibility = View.VISIBLE
+        img_setting.visibility = View.GONE
+        img_add.visibility = View.GONE
+    }
+
+    fun showMainMenuToolbatOption() {
+        img_pin.visibility = View.GONE
+        img_close.visibility = View.GONE
+        img_delete_white.visibility = View.GONE
+        img_setting.visibility = View.VISIBLE
+        img_add.visibility = View.VISIBLE
     }
 
     override fun onBackPressed() {
@@ -118,7 +166,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initViewModel(){
+    private fun initViewModel() {
         mainActivityViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
     }
 
@@ -150,16 +198,16 @@ class MainActivity : AppCompatActivity() {
     fun checkCameraAndStoragePermission() {
         showCameraDialogue()
     }
+
     private fun showCameraDialogue() {
         if (isPermissionsAllowed(mainActivityViewModel.permissions, true, REQ_CAPTURE)) {
             chooseImage()
         }
     }
+
     private fun chooseImage() {
         startActivityForResult(getPickImageIntent(), RES_IMAGE)
     }
-
-
 
     fun isPermissionsAllowed(
         permissions: Array<String>,
@@ -186,6 +234,7 @@ class MainActivity : AppCompatActivity() {
 
         return isGranted
     }
+
     fun requestRequiredPermissions(permissions: Array<String>, requestCode: Int) {
         val pendingPermissions: ArrayList<String> = ArrayList()
         permissions.forEachIndexed { index, permission ->
@@ -212,10 +261,12 @@ class MainActivity : AppCompatActivity() {
         }
         return isGranted
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray) {
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == 545 || requestCode == 544) {
@@ -308,17 +359,19 @@ class MainActivity : AppCompatActivity() {
         }
         return list
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-            when (requestCode) {
-                RES_IMAGE -> {
-                    if (resultCode == Activity.RESULT_OK) {
-                        handleImageRequest(data)
-                    }
+        when (requestCode) {
+            RES_IMAGE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    handleImageRequest(data)
                 }
             }
         }
+    }
+
     private fun handleImageRequest(data: Intent?) {
         val exceptionHandler = CoroutineExceptionHandler { _, t ->
             t.printStackTrace()
@@ -351,7 +404,6 @@ class MainActivity : AppCompatActivity() {
             var file = File(mainActivityViewModel.imageUri!!.path)
             if (file.exists()) {
                 Log.d("--------->", file.path)
-
                 mainActivityViewModel.setPhotoPath(file.path, file.name)
             }
         }

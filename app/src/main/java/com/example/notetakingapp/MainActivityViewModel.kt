@@ -31,9 +31,8 @@ public class MainActivityViewModel(application : Application) : AndroidViewModel
     var imgPath : String = ""
     var imageUri : Uri? = null
 
-
-
     val noteDetailsListLiveData = MutableLiveData<List<NoteDetail>>()
+    val pinnedNoteDetailsListLiveData = MutableLiveData<List<NoteDetail>>()
 
     var title = MutableLiveData<String>("")
     var content = MutableLiveData<String>()
@@ -45,8 +44,12 @@ public class MainActivityViewModel(application : Application) : AndroidViewModel
     var isNoteAdapterItemClicked = MutableLiveData<Boolean>()
 
     var specificNoteData = MutableLiveData<NoteDetail>()
-
-
+    var isDeleteButtonClicked = MutableLiveData<Boolean>()
+    var isPinButtomClicked = MutableLiveData<Boolean>()
+    var isMainMenuPinButtomClicked = MutableLiveData<Boolean>()
+    var isPinnedStatusUpdated = MutableLiveData<Long>()
+    var isNeedToShowLongPressEventToolbar = MutableLiveData<Boolean>()
+    var isMainMenuDeleteButtonClicked = MutableLiveData<Boolean>()
 
 
      fun onInsertNotesDetail() {
@@ -68,19 +71,45 @@ public class MainActivityViewModel(application : Application) : AndroidViewModel
                 content = content.value.toString(),
                 imageUrl= imageUriForLoadImage.value.toString(),
                 timeStamp= AppUtils.getTimestampString(),
+                isPinned = isPinned.value == true,
                 id = id
             )
             mainActivityRepo.updateNotesDetails(noteDetail)
         }
     }
 
+    fun onDeleteNotesDetail(id : Long) {
+        viewModelScope.launch (Dispatchers.IO) {
+            mainActivityRepo.deleteNoteDetail(id)
+            if(isMainMenuDeleteButtonClicked.value==true) {
+                getNotesDetail()
+                getPinnedNotesDetail(true)
+            }
+        }
+    }
+
 
     fun getNotesDetail(): LiveData<List<NoteDetail>> {
         viewModelScope.launch (Dispatchers.IO){
-            mainActivityRepo.getNotesDetails(noteDetailsListLiveData)
+            mainActivityRepo.getPinnedNotesDetails(false,noteDetailsListLiveData)
         }
         return noteDetailsListLiveData
     }
+
+    fun onUpdatePinStatusNotesDetail(id : Long, isPinEnable: Boolean) :LiveData<Long> {
+        viewModelScope.launch (Dispatchers.IO) {
+            mainActivityRepo.updatePinStatus(id,isPinEnable,isPinnedStatusUpdated)
+        }
+        return isPinnedStatusUpdated
+    }
+
+    fun getPinnedNotesDetail(isPinned : Boolean): LiveData<List<NoteDetail>> {
+        viewModelScope.launch (Dispatchers.IO){
+            mainActivityRepo.getPinnedNotesDetails(isPinned,pinnedNoteDetailsListLiveData)
+        }
+        return pinnedNoteDetailsListLiveData
+    }
+
 
     fun getNoteDetailById (id : Long) : LiveData<NoteDetail> {
         viewModelScope.launch (Dispatchers.IO) {

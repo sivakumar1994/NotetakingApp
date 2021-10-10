@@ -31,10 +31,40 @@ class MainActivityRepo(
             Log.d("=====>", e.toString())
         }
     }
-    suspend fun getSpecificNoteDataFromId(id :Long , liveData: MutableLiveData<NoteDetail>) {
+
+    suspend fun getPinnedNotesDetails(
+        isPinned: Boolean,
+        liveData: MutableLiveData<List<NoteDetail>>
+    ) {
+        try {
+            val result = notesDao.fetchPinedNotesDetails(isPinned)
+            liveData.postValue(result)
+        } catch (e: Exception) {
+            Log.d("=====>", e.toString())
+        }
+    }
+
+    suspend fun getSpecificNoteDataFromId(id: Long, liveData: MutableLiveData<NoteDetail>) {
         try {
             val result = notesDao.fetchSpecificNotesDetails(id)
             liveData.postValue(result)
+        } catch (e: Exception) {
+            Log.d("=====>", e.toString())
+        }
+    }
+
+    suspend fun deleteNoteDetail(id: Long) {
+        notesDao.deleteNotesDetail(id)
+    }
+
+    suspend fun updatePinStatus(
+        id: Long,
+        isPinEnable: Boolean,
+        liveData: MutableLiveData<Long>
+    ) {
+        try {
+             notesDao.updatePinStatus(id, isPinEnable)
+            liveData.postValue(0L)
         } catch (e: Exception) {
             Log.d("=====>", e.toString())
         }

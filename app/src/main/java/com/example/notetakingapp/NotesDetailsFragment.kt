@@ -7,17 +7,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import kotlinx.android.synthetic.main.fragment_notes_details.*
+import kotlin.properties.Delegates
 
 
 class NotesDetailsFragment : Fragment() {
 
     lateinit var mainActivityViewModel: MainActivityViewModel
     private var noteId = -1L
+    var isPinned = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,33 +43,32 @@ class NotesDetailsFragment : Fragment() {
 
 
 
-        noteId = arguments?.getLong("notesId",-1L)?: -1L
+        noteId = arguments?.getLong("notesId", -1L) ?: -1L
 
-        if(noteId != -1L) {
+        if (noteId != -1L) {
             mainActivityViewModel.getNoteDetailById(noteId)
         }
-
-           /* mainActivityViewModel.content.value = content
-            mainActivityViewModel.imageUriForLoadImage.value = imageUrl
-            et_notes_title?.setText(title)
-            et_description?.setText(title)
-            img_attached.setImageURI(Uri.parse(imageUrl))*/
-
 
         attachObserver()
 
     }
 
     private fun attachObserver() {
-        mainActivityViewModel.specificNoteData.observe(viewLifecycleOwner,{it->
-
-            et_notes_title?.setText(it.title)
-            et_description?.setText(it.content)
-            img_attached.setImageURI(Uri.parse(it.imageUrl))
+        mainActivityViewModel.specificNoteData.observe(viewLifecycleOwner, {
+            if(it!=null) {
+                et_notes_title?.setText(it?.title)
+                et_description?.setText(it?.content)
+                if (it?.isPinned != null)
+                    this.isPinned = it.isPinned
+                if (it?.imageUrl != null)
+                    img_attached.setImageURI(Uri.parse(it.imageUrl))
+            }
         })
+
         mainActivityViewModel.imageUriForLoadImage.observe(
             viewLifecycleOwner,
             Observer<String> { item ->
+                if(item!=null)
                 img_attached.setImageURI(Uri.parse(item))
             })
 
@@ -75,12 +77,40 @@ class NotesDetailsFragment : Fragment() {
             if (it) {
                 mainActivityViewModel.title.value = et_notes_title.text.toString()
                 mainActivityViewModel.content.value = et_description.text.toString()
-                if(noteId == -1L) {
+                if (noteId == -1L) {
                     mainActivityViewModel.onInsertNotesDetail()
                 } else {
+                    mainActivityViewModel.isPinned.value = isPinned
                     mainActivityViewModel.onUpdateNotesDetail(noteId)
                 }
+                noteId = -1L
                 NavHostFragment.findNavController(this).popBackStack()
+            }
+        })
+        mainActivityViewModel.isDeleteButtonClicked.observe(viewLifecycleOwner, {
+            if (it) {
+                mainActivityViewModel.onDeleteNotesDetail(noteId)
+                mainActivityViewModel.isDeleteButtonClicked.value = false
+                NavHostFragment.findNavController(this).popBackStack()
+            }
+        })
+        mainActivityViewModel.isPinButtomClicked.observe(viewLifecycleOwner, {
+            if (it) {
+                if (noteId == -1L) {
+                    Toast.makeText(context, "kindly save your Notes before pin", Toast.LENGTH_SHORT)
+                        .show()
+                } else if (!isPinned) {
+                    Toast.makeText(context, "Note Pinned Successfully", Toast.LENGTH_SHORT).show()
+                    mainActivityViewModel.onUpdatePinStatusNotesDetail(noteId, true)
+                    mainActivityViewModel.isPinned.value = true
+                    isPinned =true
+                } else {
+                    Toast.makeText(context, "Note UnPinned Successfully", Toast.LENGTH_SHORT).show()
+                    mainActivityViewModel.onUpdatePinStatusNotesDetail(noteId, false)
+                    isPinned =false
+
+                }
+                mainActivityViewModel.isPinButtomClicked.value = false
             }
         })
     }

@@ -5,7 +5,10 @@
       <map>
         <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/drawable/border_out_line.xml" value="0.20833333333333334" />
         <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/drawable/ic_attach.xml" value="0.20833333333333334" />
+        <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/drawable/ic_close.xml" value="0.20833333333333334" />
         <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/drawable/ic_delete.xml" value="0.20833333333333334" />
+        <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/drawable/ic_delete_white.xml" value="0.20833333333333334" />
+        <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/drawable/ic_pinned.xml" value="0.15462962962962962" />
         <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/drawable/ic_plus.xml" value="0.20833333333333334" />
         <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/drawable/ic_setting.xml" value="0.2203125" />
         <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/drawable/ic_share.xml" value="0.20833333333333334" />
@@ -15,7 +18,7 @@
         <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/layout/fragment_notes.xml" value="0.1" />
         <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/layout/fragment_notes_details.xml" value="0.19228764981761334" />
-        <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/layout/my_toolbar.xml" value="0.16168478260869565" />
+        <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/layout/my_toolbar.xml" value="0.2" />
         <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/layout/row_note_list_adapter.xml" value="0.1" />
         <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/layout/toolbar.xml" value="0.18342391304347827" />
         <entry key="..\:/sivakumar/NotetakingApp/app/src/main/res/menu/menu_main.xml" value="0.20416666666666666" />
