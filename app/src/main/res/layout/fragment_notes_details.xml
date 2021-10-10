@@ -15,9 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:textSize="18sp"
+        android:textSize="19sp"
         app:layout_constraintTop_toTopOf="parent"
         android:background="@null"
+        android:typeface="serif"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         android:hint="@string/notes_title"/>
         <EditText
             android:id="@+id/et_description"

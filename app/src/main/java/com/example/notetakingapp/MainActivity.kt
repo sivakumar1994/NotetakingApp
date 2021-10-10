@@ -32,10 +32,12 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.notetakingapp.CameraConstant.REQ_CAPTURE
 import com.example.notetakingapp.CameraConstant.RES_IMAGE
 import com.olam.farmapp.utils.compressImageFile
+import kotlinx.android.synthetic.main.fragment_notes_details.*
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -44,8 +46,13 @@ import java.io.File
 
 
 class MainActivity : AppCompatActivity() {
+
     private var navController: NavController? = null
+
     lateinit var mainActivityViewModel : MainActivityViewModel
+
+    lateinit var popupMenu : PopupMenu
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -53,36 +60,57 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = pin_notes_host_fragment as NavHostFragment
         val graphInflater = navHostFragment.navController.navInflater
         val navGraph = graphInflater.inflate(R.navigation.nav_graph_pin_notes)
+
         navController = navHostFragment.navController
         navGraph.startDestination = R.id.noteFragmentDest
         navController!!.setGraph(navGraph)
+
+        popupMenu = PopupMenu(this@MainActivity, img_save)
+        popupMenu.getMenuInflater().inflate(R.menu.menu_main, popupMenu.getMenu())
+        setForceShowIcon(popupMenu)
         img_add.setOnClickListener {
             navController!!.navigate(R.id.notesDetailsFragmentDest)
             img_save.visibility = View.VISIBLE
             img_add.visibility = View.GONE
             img_more.visibility = View.VISIBLE
-            val popupMenu = PopupMenu(this@MainActivity, img_save)
-            popupMenu.getMenuInflater().inflate(R.menu.menu_main, popupMenu.getMenu());
-            setForceShowIcon(popupMenu)
-            img_more.setOnClickListener {
-                popupMenu.show();
-            }
-            popupMenu.setOnMenuItemClickListener { item: MenuItem? ->
-                when (item!!.itemId) {
-                    R.id.action_add_image -> {
-                        Toast.makeText(this@MainActivity, item.title, Toast.LENGTH_SHORT).show()
-                        checkCameraAndStoragePermission();
-                    }
+        }
+        img_more.setOnClickListener {
+            popupMenu.show();
+        }
+        popupMenu.setOnMenuItemClickListener { item: MenuItem? ->
+            when (item!!.itemId) {
+                R.id.action_add_image -> {
+                    // Toast.makeText(this@MainActivity, item.title, Toast.LENGTH_SHORT).show()
+                    checkCameraAndStoragePermission();
                 }
-                true
             }
+            true
         }
 
         initViewModel()
+        setObserver()
+
+        img_save.setOnClickListener {
+            mainActivityViewModel.isSaveButtonClicked.value =true
+            img_save.visibility = View.GONE
+            img_add.visibility = View.VISIBLE
+            img_more.visibility = View.GONE
+        }
+
+    }
+
+    private fun setObserver() {
+       mainActivityViewModel.isNoteAdapterItemClicked.observe(this,{
+           img_save.visibility = View.VISIBLE
+           img_add.visibility = View.GONE
+           img_more.visibility = View.VISIBLE
+           mainActivityViewModel.isSaveButtonClicked.value = false
+       })
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
+        // Back to main screen so toolbar item will be show based on below condition
         if (navController?.currentDestination?.id == R.id.noteFragmentDest) {
             img_save.visibility = View.GONE
             img_add.visibility = View.VISIBLE
@@ -328,4 +356,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }

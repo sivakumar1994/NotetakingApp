@@ -1,5 +1,5 @@
 package com.example.notetakingapp
 
 interface OnNotesItemClickListener {
-    fun onSelectedNotesItem()
+    fun onSelectedNotesItem(noteDetail: NoteDetail)
 }

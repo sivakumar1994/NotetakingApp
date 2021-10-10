@@ -6,12 +6,40 @@
     <fragment
         android:id="@+id/noteFragmentDest"
         android:name="com.example.notetakingapp.NotesFragment"
-        tools:layout="@layout/fragment_notes"/>
+        tools:layout="@layout/fragment_notes">
+
+        <!--<argument
+            android:name="notesDetails"
+            app:argType="com.example.notetakingapp.NoteDetail"
+            />-->
+        <argument
+            android:name="notesId"
+            app:argType="long"/>
+        <action
+            android:id="@+id/action_noteFragmentDest_to_notesDetailsFragmentDest"
+            app:destination="@id/notesDetailsFragmentDest">
+            <argument
+                android:name="notesId"
+                app:argType="long"
+                />
+
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/notesDetailsFragmentDest"
         android:name="com.example.notetakingapp.NotesDetailsFragment"
         tools:layout="@layout/fragment_notes_details">
+        <!--<argument
+            android:name="notesDetails"
+            app:argType="com.example.notetakingapp.NoteDetail"/>
 
+        <action
+            android:id="@+id/action_notesDetailsFragmentDest_to_noteFragmentDest"
+            app:destination="@id/noteFragmentDest" >
+        <argument
+            android:name="notesDetails"
+            app:argType="com.example.notetakingapp.NoteDetail"/>
+        </action>-->
     </fragment>
 
 </navigation>
