@@ -96,6 +96,7 @@ class NotesListAdapter(var listener: OnNotesItemClickListener) :
     @SuppressLint("NotifyDataSetChanged")
     fun updateList(noteDetailListUpdated: ArrayList<NoteDetail>) {
         noteDetailList = noteDetailListUpdated
+        selectedPos = -1;
         notifyDataSetChanged()
     }
 }

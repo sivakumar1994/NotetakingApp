@@ -9,6 +9,9 @@
     <string name="pin">Pin</string>
     <string name="share">Share</string>
     <string name="delete">Delete</string>
+    <string name="delete_msg">Do you want to delete?</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
     <string name="permission_not_granted">Permission Not Granted</string>
     <string name="select_capture_image">Please Capture Image</string>
     <string name="some_err">Error occur please try again later</string>

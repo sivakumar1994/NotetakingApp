@@ -1,51 +1,41 @@
 package com.example.notetakingapp
 
-import android.R.attr
-import android.annotation.SuppressLint
-import android.content.Context
-import android.icu.lang.UCharacter.GraphemeClusterBreak.V
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.util.Log
-import android.view.View
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.my_toolbar.*
-import androidx.appcompat.view.menu.MenuPopupHelper
-
-import androidx.appcompat.view.menu.MenuBuilder
-import androidx.appcompat.widget.PopupMenu
-import java.lang.reflect.Field
-import java.lang.reflect.Method
-import java.security.AccessController.getContext
-import android.R.attr.button
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.os.Parcelable
 import android.provider.MediaStore
+import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import com.example.notetakingapp.CameraConstant.REQ_CAPTURE
 import com.example.notetakingapp.CameraConstant.RES_IMAGE
 import com.olam.farmapp.utils.compressImageFile
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_notes_details.*
+import kotlinx.android.synthetic.main.my_toolbar.*
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
+import java.lang.reflect.Field
+import java.lang.reflect.Method
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
 
     private var navController: NavController? = null
 
@@ -89,9 +79,6 @@ class MainActivity : AppCompatActivity() {
                     checkCameraAndStoragePermission();
                 }
                 R.id.action_delete -> {
-                    img_save.visibility = View.GONE
-                    img_add.visibility = View.VISIBLE
-                    img_more.visibility = View.GONE
                     mainActivityViewModel.isDeleteButtonClicked.value = true
                 }
                 R.id.action_pin -> {
@@ -117,10 +104,13 @@ class MainActivity : AppCompatActivity() {
             showMainMenuToolbatOption()
         }
         img_delete_white.setOnClickListener {
-            mainActivityViewModel.isMainMenuDeleteButtonClicked.value = true
-            showMainMenuToolbatOption()
+            showDeleteDialog()
         }
 
+    }
+
+    private fun showDeleteDialog() {
+        MyCustomDialog(this).show(supportFragmentManager, "MyCustomDialog")
     }
 
     private fun setObserver() {
@@ -133,9 +123,16 @@ class MainActivity : AppCompatActivity() {
         mainActivityViewModel.isNeedToShowLongPressEventToolbar.observe(this, {
             if (it) {
                 showLongPressToolbarOption()
-            }
-            else {
+            } else {
                 showMainMenuToolbatOption()
+            }
+        })
+        mainActivityViewModel.isDeleteConfirmButtonClicked.observe(this,{
+            if(it){
+                img_save.visibility = View.GONE
+                img_add.visibility = View.VISIBLE
+                img_more.visibility = View.GONE
+                mainActivityViewModel.isDeleteConfirmButtonClicked.value = false
             }
         })
     }
@@ -407,6 +404,11 @@ class MainActivity : AppCompatActivity() {
                 mainActivityViewModel.setPhotoPath(file.path, file.name)
             }
         }
+    }
+
+    override fun onConfirm() {
+        mainActivityViewModel.isMainMenuDeleteButtonClicked.value = true
+        showMainMenuToolbatOption()
     }
 
 

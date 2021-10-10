@@ -50,6 +50,7 @@ public class MainActivityViewModel(application : Application) : AndroidViewModel
     var isPinnedStatusUpdated = MutableLiveData<Long>()
     var isNeedToShowLongPressEventToolbar = MutableLiveData<Boolean>()
     var isMainMenuDeleteButtonClicked = MutableLiveData<Boolean>()
+    var isDeleteConfirmButtonClicked = MutableLiveData<Boolean>()
 
 
      fun onInsertNotesDetail() {

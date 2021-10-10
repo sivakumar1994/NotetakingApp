@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_notes_details.*
 import kotlin.properties.Delegates
 
 
-class NotesDetailsFragment : Fragment() {
+class NotesDetailsFragment : Fragment(),OnConfirmationDialogeListener {
 
     lateinit var mainActivityViewModel: MainActivityViewModel
     private var noteId = -1L
@@ -89,9 +89,8 @@ class NotesDetailsFragment : Fragment() {
         })
         mainActivityViewModel.isDeleteButtonClicked.observe(viewLifecycleOwner, {
             if (it) {
-                mainActivityViewModel.onDeleteNotesDetail(noteId)
+                showDeleteDialog()
                 mainActivityViewModel.isDeleteButtonClicked.value = false
-                NavHostFragment.findNavController(this).popBackStack()
             }
         })
         mainActivityViewModel.isPinButtomClicked.observe(viewLifecycleOwner, {
@@ -113,6 +112,15 @@ class NotesDetailsFragment : Fragment() {
                 mainActivityViewModel.isPinButtomClicked.value = false
             }
         })
+    }
+    private fun showDeleteDialog() {
+        MyCustomDialog(this).show(childFragmentManager, "MyCustomDialog")
+    }
+    override fun onConfirm() {
+        mainActivityViewModel.isDeleteConfirmButtonClicked.value = true
+        mainActivityViewModel.onDeleteNotesDetail(noteId)
+        mainActivityViewModel.isDeleteButtonClicked.value = false
+        NavHostFragment.findNavController(this).popBackStack()
     }
 
 
