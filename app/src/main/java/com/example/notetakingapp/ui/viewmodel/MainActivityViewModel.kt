@@ -16,8 +16,55 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-public class MainActivityViewModel(application : Application) : AndroidViewModel(application) {
+class MainActivityViewModel(application : Application) : AndroidViewModel(application) {
     var queryImageUrl : String=""
+    val permissions = arrayOf(Manifest.permission.CAMERA
+        ,Manifest.permission.READ_EXTERNAL_STORAGE
+        ,Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+    var imgPath : String = ""
+
+    var imageUri : Uri? = null
+
+    val noteDetailsListLiveData = MutableLiveData<List<NoteDetail>>()
+
+    val pinnedNoteDetailsListLiveData = MutableLiveData<List<NoteDetail>>()
+
+    var title = MutableLiveData<String>("")
+
+    var content = MutableLiveData<String>()
+
+    var timeStamp = MutableLiveData<String>()
+
+    var imageUriForLoadImage = MutableLiveData<String>()
+
+    var isPinned = MutableLiveData<Boolean>()
+
+    var isSaveButtonClicked = MutableLiveData<Boolean>()
+
+    var isNoteAdapterItemClicked = MutableLiveData<Boolean>()
+
+    var specificNoteData = MutableLiveData<NoteDetail>()
+
+    var isDeleteButtonClicked = MutableLiveData<Boolean>()
+
+    var isPinButtomClicked = MutableLiveData<Boolean>()
+
+    var isMainMenuPinButtomClicked = MutableLiveData<Boolean>()
+
+    var isPinnedStatusUpdated = MutableLiveData<Long>()
+
+    var isNeedToShowLongPressEventToolbar = MutableLiveData<Boolean>()
+
+    var isMainMenuDeleteButtonClicked = MutableLiveData<Boolean>()
+
+    var isDeleteConfirmButtonClicked = MutableLiveData<Boolean>()
+
+    var pinnedNotesCount = MutableLiveData<Int>()
+
+    var isSharedButtonClicked = MutableLiveData<Boolean>()
+
+    private var pinId= -1L
 
     @Inject
     lateinit var mainActivityRepo: MainActivityRepo
@@ -26,38 +73,6 @@ public class MainActivityViewModel(application : Application) : AndroidViewModel
     init {
         (application as NoteTakingApplication).component.inject(this)
     }
-
-    val permissions = arrayOf(Manifest.permission.CAMERA
-        ,Manifest.permission.READ_EXTERNAL_STORAGE
-        ,Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    var imgPath : String = ""
-    var imageUri : Uri? = null
-
-    val noteDetailsListLiveData = MutableLiveData<List<NoteDetail>>()
-    val pinnedNoteDetailsListLiveData = MutableLiveData<List<NoteDetail>>()
-
-    var title = MutableLiveData<String>("")
-    var content = MutableLiveData<String>()
-    var timeStamp = MutableLiveData<String>()
-    var imageUriForLoadImage = MutableLiveData<String>()
-    var isPinned = MutableLiveData<Boolean>()
-
-    var isSaveButtonClicked = MutableLiveData<Boolean>()
-    var isNoteAdapterItemClicked = MutableLiveData<Boolean>()
-
-    var specificNoteData = MutableLiveData<NoteDetail>()
-    var isDeleteButtonClicked = MutableLiveData<Boolean>()
-    var isPinButtomClicked = MutableLiveData<Boolean>()
-    var isMainMenuPinButtomClicked = MutableLiveData<Boolean>()
-    var isPinnedStatusUpdated = MutableLiveData<Long>()
-    var isNeedToShowLongPressEventToolbar = MutableLiveData<Boolean>()
-    var isMainMenuDeleteButtonClicked = MutableLiveData<Boolean>()
-    var isDeleteConfirmButtonClicked = MutableLiveData<Boolean>()
-    var pinnedNotesCount = MutableLiveData<Int>()
-    var isSharedButtonClicked = MutableLiveData<Boolean>()
-
-    var pinId= -1L;
-
 
      fun onInsertNotesDetail() {
          viewModelScope.launch (Dispatchers.IO){

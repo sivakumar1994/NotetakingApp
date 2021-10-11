@@ -18,5 +18,11 @@
     <string name="file_provider_name">.fileProvider</string>
     <string name="share_subject">Share notes</string>
     <string name="share_using">Share Using</string>
+    <string name="pin_note_error">Pinned Note should not be selectable</string>
+    <string name="pin_note_error_save_alert">kindly save your Notes before pin</string>
+    <string name="pin_note_un_pinned">Notes UnPinned Successfully</string>
+    <string name="share_error_enable_setting">Kindly enable shared button in setting</string>
+    <string name="share_error_save">Kindly save notes before share it</string>
+    <string name="pin_error_count">Can\'t pin more than 4 notes</string>
 
 </resources>

@@ -15,11 +15,11 @@ import com.example.notetakingapp.utils.AppUtils
 import kotlinx.android.synthetic.main.row_note_list_adapter.view.*
 
 
-class NotesListAdapter(var listener: OnNotesItemClickListener) :
+class NotesListAdapter(private var listener: OnNotesItemClickListener) :
     RecyclerView.Adapter<NotesListAdapter.NotesListViewHolder>() {
-    var noteDetailList: ArrayList<NoteDetail>? = null
+    private var noteDetailList: ArrayList<NoteDetail>? = null
     var context: Context? = null
-    var selectedPos = -1
+    private var selectedPos = -1
 
     inner class NotesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
@@ -27,7 +27,7 @@ class NotesListAdapter(var listener: OnNotesItemClickListener) :
         val rootView = LayoutInflater.from(parent.context)
             .inflate(R.layout.row_note_list_adapter, parent, false)
         this.context = parent.context
-        return NotesListViewHolder(rootView);
+        return NotesListViewHolder(rootView)
     }
 
     override fun onBindViewHolder(holder: NotesListViewHolder, position: Int) {
@@ -57,7 +57,6 @@ class NotesListAdapter(var listener: OnNotesItemClickListener) :
                                 R.color.cardview_dark_background
                             )
                         )
-
                     } else {
                         constraint_layout.setBackgroundColor(
                             ContextCompat.getColor(
@@ -66,7 +65,6 @@ class NotesListAdapter(var listener: OnNotesItemClickListener) :
                             )
                         )
                     }
-
                     notifyItemChanged(selectedPos)
                     if (selectedPos == position) {
                         selectedPos = -1
@@ -82,13 +80,12 @@ class NotesListAdapter(var listener: OnNotesItemClickListener) :
                 } else {
                     Toast.makeText(
                         context,
-                        "Pinned Note should not be selectable",
+                        context.getString(R.string.pin_note_error),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
             }
             return@setOnLongClickListener true
-
         }
     }
 
@@ -99,7 +96,7 @@ class NotesListAdapter(var listener: OnNotesItemClickListener) :
     @SuppressLint("NotifyDataSetChanged")
     fun updateList(noteDetailListUpdated: ArrayList<NoteDetail>) {
         noteDetailList = noteDetailListUpdated
-        selectedPos = -1;
+        selectedPos = -1
         notifyDataSetChanged()
     }
 }

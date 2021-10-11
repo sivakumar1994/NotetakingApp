@@ -8,21 +8,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.example.notetakingapp.R
 import com.example.notetakingapp.listener.OnConfirmationDialogeListener
 import com.example.notetakingapp.ui.viewmodel.MainActivityViewModel
+import com.example.notetakingapp.utils.Constants.BUNDLE_NOTE_ID
+import com.example.notetakingapp.utils.Constants.DIALOG_TAG
 import com.example.notetakingapp.utils.SharedPreferenceHelper
 import kotlinx.android.synthetic.main.fragment_notes_details.*
 
 
 class NotesDetailsFragment : Fragment(), OnConfirmationDialogeListener {
 
-    lateinit var mainActivityViewModel: MainActivityViewModel
+    private lateinit var mainActivityViewModel: MainActivityViewModel
+
     private var noteId = -1L
-    var isPinned = false;
+
+    private var isPinned = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,24 +38,17 @@ class NotesDetailsFragment : Fragment(), OnConfirmationDialogeListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_notes_details, container, false)
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-
-        noteId = arguments?.getLong("notesId", -1L) ?: -1L
-
+        noteId = arguments?.getLong(BUNDLE_NOTE_ID, -1L) ?: -1L
         if (noteId != -1L) {
             mainActivityViewModel.getNoteDetailById(noteId)
         }
-
         attachObserver()
-
     }
 
     private fun attachObserver() {
@@ -70,8 +66,7 @@ class NotesDetailsFragment : Fragment(), OnConfirmationDialogeListener {
         })
 
         mainActivityViewModel.imageUriForLoadImage.observe(
-            viewLifecycleOwner,
-            Observer<String> { item ->
+            viewLifecycleOwner, { item ->
                 if (item != null)
                     img_attached.setImageURI(Uri.parse(item))
             })
@@ -100,7 +95,7 @@ class NotesDetailsFragment : Fragment(), OnConfirmationDialogeListener {
         mainActivityViewModel.isPinButtomClicked.observe(viewLifecycleOwner, {
             if (it) {
                 if (noteId == -1L) {
-                    Toast.makeText(context, "kindly save your Notes before pin", Toast.LENGTH_SHORT)
+                    Toast.makeText(context, getString(R.string.pin_note_error_save_alert), Toast.LENGTH_SHORT)
                         .show()
                 } else if (!isPinned) {
                     //  Toast.makeText(context, "Note Pinned Successfully", Toast.LENGTH_SHORT).show()
@@ -108,7 +103,7 @@ class NotesDetailsFragment : Fragment(), OnConfirmationDialogeListener {
                     mainActivityViewModel.isPinned.value = true
                     isPinned = true
                 } else {
-                    Toast.makeText(context, "Note UnPinned Successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, getString(R.string.pin_note_un_pinned), Toast.LENGTH_SHORT).show()
                     mainActivityViewModel.onUpdatePinStatusNotesDetail(noteId, false)
                     isPinned = false
 
@@ -138,12 +133,12 @@ class NotesDetailsFragment : Fragment(), OnConfirmationDialogeListener {
                     } else {
                         Toast.makeText(
                             context,
-                            "Kindly enable shared button in setting",
+                            getString(R.string.share_error_enable_setting),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 } else {
-                    Toast.makeText(context, "Kindly save notes before share it", Toast.LENGTH_SHORT)
+                    Toast.makeText(context, getString(R.string.share_error_save), Toast.LENGTH_SHORT)
                         .show()
                 }
                 mainActivityViewModel.isSharedButtonClicked.value = false
@@ -152,7 +147,7 @@ class NotesDetailsFragment : Fragment(), OnConfirmationDialogeListener {
     }
 
     private fun showDeleteDialog() {
-        MyCustomDialog(this).show(childFragmentManager, "MyCustomDialog")
+        MyCustomDialog(this).show(childFragmentManager, DIALOG_TAG)
     }
 
     override fun onConfirm() {

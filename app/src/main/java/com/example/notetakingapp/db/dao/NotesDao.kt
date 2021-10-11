@@ -16,10 +16,10 @@ abstract class NotesDao : BaseDao<NoteDetail> {
     @Query("UPDATE ${Constants.NEW_NOTE_CREATION} SET isPinned =:isPinEnable WHERE id =:id")
     abstract suspend fun updatePinStatus(id : Long, isPinEnable: Boolean)
 
-    @Query("SELECT * FROM ${Constants.NEW_NOTE_CREATION} ORDER BY id ASC")
+    @Query("SELECT * FROM ${Constants.NEW_NOTE_CREATION} ORDER BY timeStamp ASC")
     abstract suspend fun fetchAllNotesDetails():List<NoteDetail>
 
-    @Query("SELECT * FROM ${Constants.NEW_NOTE_CREATION} WHERE isPinned =:pinned ORDER BY id ASC")
+    @Query("SELECT * FROM ${Constants.NEW_NOTE_CREATION} WHERE isPinned =:pinned ORDER BY timeStamp ASC")
     abstract suspend fun fetchPinedNotesDetails(pinned: Boolean):List<NoteDetail>
 
     @Query("SELECT * FROM ${Constants.NEW_NOTE_CREATION} WHERE id =:id")

@@ -7,5 +7,7 @@ object Constants {
     const val APP_PREF="APPPREF"
     const val SHARED_PREF_NOTES_STORED_ORDER="Notes_Stored_Order"
     const val SHARED_PREF_ABLE_TO_SHARE_NOTES="Able_To_Share_Notes"
+    const val DIALOG_TAG="MyCustomDialog"
+    const val BUNDLE_NOTE_ID="notesId"
 
 }

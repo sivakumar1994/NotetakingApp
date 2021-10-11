@@ -20,8 +20,12 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.example.notetakingapp.*
+import com.example.notetakingapp.listener.OnConfirmationDialogeListener
+import com.example.notetakingapp.ui.viewmodel.MainActivityViewModel
 import com.example.notetakingapp.utils.CameraConstant.REQ_CAPTURE
 import com.example.notetakingapp.utils.CameraConstant.RES_IMAGE
+import com.example.notetakingapp.utils.Constants.DIALOG_TAG
 import com.olam.farmapp.utils.compressImageFile
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_notes_details.*
@@ -34,18 +38,15 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.lang.reflect.Field
 import java.lang.reflect.Method
-import com.example.notetakingapp.*
-import com.example.notetakingapp.listener.OnConfirmationDialogeListener
-import com.example.notetakingapp.ui.viewmodel.MainActivityViewModel
 
 
 class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
 
     private var navController: NavController? = null
 
-    lateinit var mainActivityViewModel: MainActivityViewModel
+    private lateinit var mainActivityViewModel: MainActivityViewModel
 
-    lateinit var popupMenu: PopupMenu
+    private lateinit var popupMenu: PopupMenu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +56,7 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
         val graphInflater = navHostFragment.navController.navInflater
         val navGraph = graphInflater.inflate(R.navigation.nav_graph_pin_notes)
 
+        // Navigation graph initialization
         navController = navHostFragment.navController
         navGraph.startDestination = R.id.noteFragmentDest
         navController!!.setGraph(navGraph)
@@ -74,7 +76,7 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
             img_more.visibility = View.VISIBLE
         }
         img_more.setOnClickListener {
-            popupMenu.show();
+            popupMenu.show()
         }
         popupMenu.setOnMenuItemClickListener { item: MenuItem? ->
             when (item!!.itemId) {
@@ -120,7 +122,7 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
     }
 
     private fun showDeleteDialog() {
-        MyCustomDialog(this).show(supportFragmentManager, "MyCustomDialog")
+        MyCustomDialog(this).show(supportFragmentManager, DIALOG_TAG)
     }
 
     private fun setObserver() {
@@ -145,23 +147,24 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
                 mainActivityViewModel.isDeleteConfirmButtonClicked.value = false
             }
         })
-        mainActivityViewModel.pinnedNotesCount.observe(this,{
-            if(it!=-1) {
-                if(it>3) {
+        mainActivityViewModel.pinnedNotesCount.observe(this, {
+            if (it != -1) {
+                // for avoid to pin more than 3 Notes
+                if (it > 3) {
                     Toast.makeText(
                         this@MainActivity,
-                        "Can't pin more than 4 notes",
+                        getString(R.string.pin_error_count),
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
                     mainActivityViewModel.onUpdatePinStatus()
                 }
-                mainActivityViewModel.pinnedNotesCount.value =-1
+                mainActivityViewModel.pinnedNotesCount.value = -1
             }
         })
     }
 
-    fun showLongPressToolbarOption() {
+    private fun showLongPressToolbarOption() {
         img_pin.visibility = View.VISIBLE
         img_close.visibility = View.VISIBLE
         img_delete_white.visibility = View.VISIBLE
@@ -169,7 +172,7 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
         img_add.visibility = View.GONE
     }
 
-    fun showMainMenuToolbatOption() {
+    private fun showMainMenuToolbatOption() {
         img_pin.visibility = View.GONE
         img_close.visibility = View.GONE
         img_delete_white.visibility = View.GONE
@@ -193,7 +196,7 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
 
 
     // This method help to force to show image in popup toolbar
-    fun setForceShowIcon(popupMenu: PopupMenu) {
+    private fun setForceShowIcon(popupMenu: PopupMenu) {
         try {
             val fields: Array<Field> = popupMenu.javaClass.declaredFields
             for (field in fields) {
@@ -216,7 +219,7 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
         }
     }
 
-    fun checkCameraAndStoragePermission() {
+    private fun checkCameraAndStoragePermission() {
         showCameraDialogue()
     }
 
@@ -230,7 +233,7 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
         startActivityForResult(getPickImageIntent(), RES_IMAGE)
     }
 
-    fun isPermissionsAllowed(
+    private fun isPermissionsAllowed(
         permissions: Array<String>,
         shouldRequestIfNotAllowed: Boolean = false,
         requestCode: Int = -1
@@ -248,7 +251,7 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
             }
         }
         if (!isGranted && shouldRequestIfNotAllowed) {
-            if (requestCode.equals(-1))
+            if (requestCode == -1)
                 throw RuntimeException("Send request code in third parameter")
             requestRequiredPermissions(permissions, requestCode)
         }
@@ -256,7 +259,7 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
         return isGranted
     }
 
-    fun requestRequiredPermissions(permissions: Array<String>, requestCode: Int) {
+    private fun requestRequiredPermissions(permissions: Array<String>, requestCode: Int) {
         val pendingPermissions: ArrayList<String> = ArrayList()
         permissions.forEachIndexed { index, permission ->
             if (ContextCompat.checkSelfPermission(
@@ -273,7 +276,7 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
         }
     }
 
-    fun isAllPermissionsGranted(grantResults: IntArray): Boolean {
+    private fun isAllPermissionsGranted(grantResults: IntArray): Boolean {
         var isGranted = true
         for (grantResult in grantResults) {
             isGranted = grantResult.equals(PackageManager.PERMISSION_GRANTED)
@@ -322,6 +325,17 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            RES_IMAGE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    handleImageRequest(data)
+                }
+            }
+        }
+    }
+// show popup option for take photo from galary or camera
     private fun getPickImageIntent(): Intent? {
         var chooserIntent: Intent? = null
 
@@ -349,6 +363,7 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
         return chooserIntent
     }
 
+    // Help to get the file directory path
     private fun setImageUri(): Uri {
         val folder = File("${getExternalFilesDir("notesimages")}")
         folder.mkdirs()
@@ -366,10 +381,7 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
         return mainActivityViewModel.imageUri!!
     }
 
-    private fun addIntentsToList(
-        context: Context,
-        list: MutableList<Intent>,
-        intent: Intent
+    private fun addIntentsToList(context: Context, list: MutableList<Intent>, intent: Intent
     ): MutableList<Intent> {
         val resInfo = context.packageManager.queryIntentActivities(intent, 0)
         for (resolveInfo in resInfo) {
@@ -379,18 +391,6 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
             list.add(targetedIntent)
         }
         return list
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        when (requestCode) {
-            RES_IMAGE -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    handleImageRequest(data)
-                }
-            }
-        }
     }
 
     private fun handleImageRequest(data: Intent?) {
@@ -422,7 +422,7 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
                 )
             }
             mainActivityViewModel.imageUri = Uri.fromFile(File(mainActivityViewModel.queryImageUrl))
-            var file = File(mainActivityViewModel.imageUri!!.path)
+            val file = File(mainActivityViewModel.imageUri!!.path)
             if (file.exists()) {
                 Log.d("--------->", file.path)
                 mainActivityViewModel.setPhotoPath(file.path, file.name)
@@ -434,6 +434,4 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
         mainActivityViewModel.isMainMenuDeleteButtonClicked.value = true
         showMainMenuToolbatOption()
     }
-
-
 }
