@@ -86,7 +86,10 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
                     mainActivityViewModel.isDeleteButtonClicked.value = true
                 }
                 R.id.action_pin -> {
-                    mainActivityViewModel.isPinButtomClicked.value = true;
+                    mainActivityViewModel.isPinButtomClicked.value = true
+                }
+                R.id.action_share -> {
+                    mainActivityViewModel.isSharedButtonClicked.value = true
                 }
             }
             true

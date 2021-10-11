@@ -23,9 +23,13 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        switch1.setChecked(SharedPreferenceHelper(requireContext()).getNotesOrderPref())
+        switch1.isChecked = SharedPreferenceHelper(requireContext()).getNotesOrderPref()
         switch1.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
             SharedPreferenceHelper(requireContext()).saveNotesOrderPref(isChecked)
         })
+        switch2.isChecked = SharedPreferenceHelper(requireContext()).getSharedNotesPref()
+        switch2.setOnCheckedChangeListener { buttonView, isChecked ->
+            SharedPreferenceHelper(requireContext()).saveSharedNotesPref(isChecked)
+        }
     }
 }

@@ -54,6 +54,7 @@ public class MainActivityViewModel(application : Application) : AndroidViewModel
     var isMainMenuDeleteButtonClicked = MutableLiveData<Boolean>()
     var isDeleteConfirmButtonClicked = MutableLiveData<Boolean>()
     var pinnedNotesCount = MutableLiveData<Int>()
+    var isSharedButtonClicked = MutableLiveData<Boolean>()
 
     var pinId= -1L;
 

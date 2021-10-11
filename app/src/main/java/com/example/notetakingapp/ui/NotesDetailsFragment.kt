@@ -1,5 +1,6 @@
 package com.example.notetakingapp.ui
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,9 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
-import com.example.notetakingapp.ui.viewmodel.MainActivityViewModel
-import com.example.notetakingapp.listener.OnConfirmationDialogeListener
 import com.example.notetakingapp.R
+import com.example.notetakingapp.listener.OnConfirmationDialogeListener
+import com.example.notetakingapp.ui.viewmodel.MainActivityViewModel
+import com.example.notetakingapp.utils.SharedPreferenceHelper
 import kotlinx.android.synthetic.main.fragment_notes_details.*
 
 
@@ -56,12 +58,14 @@ class NotesDetailsFragment : Fragment(), OnConfirmationDialogeListener {
     private fun attachObserver() {
         mainActivityViewModel.specificNoteData.observe(viewLifecycleOwner, {
             if (it != null) {
-                et_notes_title?.setText(it?.title)
-                et_description?.setText(it?.content)
+                et_notes_title?.setText(it.title)
+                et_description?.setText(it.content)
                 if (it?.isPinned != null)
                     this.isPinned = it.isPinned
                 if (it?.imageUrl != null)
                     img_attached.setImageURI(Uri.parse(it.imageUrl))
+                mainActivityViewModel.title.value = it.title
+                mainActivityViewModel.content.value = it.content
             }
         })
 
@@ -99,17 +103,50 @@ class NotesDetailsFragment : Fragment(), OnConfirmationDialogeListener {
                     Toast.makeText(context, "kindly save your Notes before pin", Toast.LENGTH_SHORT)
                         .show()
                 } else if (!isPinned) {
-                  //  Toast.makeText(context, "Note Pinned Successfully", Toast.LENGTH_SHORT).show()
+                    //  Toast.makeText(context, "Note Pinned Successfully", Toast.LENGTH_SHORT).show()
                     mainActivityViewModel.onUpdatePinStatusNotesDetail(noteId, true)
                     mainActivityViewModel.isPinned.value = true
-                    isPinned =true
+                    isPinned = true
                 } else {
                     Toast.makeText(context, "Note UnPinned Successfully", Toast.LENGTH_SHORT).show()
                     mainActivityViewModel.onUpdatePinStatusNotesDetail(noteId, false)
-                    isPinned =false
+                    isPinned = false
 
                 }
                 mainActivityViewModel.isPinButtomClicked.value = false
+            }
+        })
+        mainActivityViewModel.isSharedButtonClicked.observe(viewLifecycleOwner, {
+            if (it) {
+                if (noteId != -1L) {
+                    if (SharedPreferenceHelper(requireContext()).getSharedNotesPref()) {
+                        val intent = Intent(Intent.ACTION_SEND)
+                        val shareBody =
+                            "Title : " + mainActivityViewModel.title.value + '\n' + "Content :" + mainActivityViewModel.content.value
+                        intent.type = "text/plain"
+                        intent.putExtra(
+                            Intent.EXTRA_SUBJECT,
+                            getString(R.string.share_subject)
+                        )
+                        intent.putExtra(Intent.EXTRA_TEXT, shareBody)
+                        startActivity(
+                            Intent.createChooser(
+                                intent,
+                                getString(R.string.share_using)
+                            )
+                        )
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Kindly enable shared button in setting",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } else {
+                    Toast.makeText(context, "Kindly save notes before share it", Toast.LENGTH_SHORT)
+                        .show()
+                }
+                mainActivityViewModel.isSharedButtonClicked.value = false
             }
         })
     }
@@ -117,6 +154,7 @@ class NotesDetailsFragment : Fragment(), OnConfirmationDialogeListener {
     private fun showDeleteDialog() {
         MyCustomDialog(this).show(childFragmentManager, "MyCustomDialog")
     }
+
     override fun onConfirm() {
         mainActivityViewModel.isDeleteConfirmButtonClicked.value = true
         mainActivityViewModel.onDeleteNotesDetail(noteId)

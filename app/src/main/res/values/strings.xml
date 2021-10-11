@@ -16,5 +16,7 @@
     <string name="select_capture_image">Please Capture Image</string>
     <string name="some_err">Error occur please try again later</string>
     <string name="file_provider_name">.fileProvider</string>
+    <string name="share_subject">Share notes</string>
+    <string name="share_using">Share Using</string>
 
 </resources>
