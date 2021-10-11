@@ -12,6 +12,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
@@ -25,6 +26,7 @@ import com.example.notetakingapp.CameraConstant.RES_IMAGE
 import com.olam.farmapp.utils.compressImageFile
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_notes_details.*
+import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.my_toolbar.*
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +35,10 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.lang.reflect.Field
 import java.lang.reflect.Method
+import android.R.attr.data
+
+
+
 
 
 class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
@@ -106,6 +112,9 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
         img_delete_white.setOnClickListener {
             showDeleteDialog()
         }
+        img_setting.setOnClickListener {
+            navController!!.navigate(R.id.settingsFragment)
+        }
 
     }
 
@@ -127,12 +136,26 @@ class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {
                 showMainMenuToolbatOption()
             }
         })
-        mainActivityViewModel.isDeleteConfirmButtonClicked.observe(this,{
-            if(it){
+        mainActivityViewModel.isDeleteConfirmButtonClicked.observe(this, {
+            if (it) {
                 img_save.visibility = View.GONE
                 img_add.visibility = View.VISIBLE
                 img_more.visibility = View.GONE
                 mainActivityViewModel.isDeleteConfirmButtonClicked.value = false
+            }
+        })
+        mainActivityViewModel.pinnedNotesCount.observe(this,{
+            if(it!=-1) {
+                if(it>3) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Can't pin more than 4 notes",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    mainActivityViewModel.onUpdatePinStatus()
+                }
+                mainActivityViewModel.pinnedNotesCount.value =-1
             }
         })
     }

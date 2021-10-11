@@ -2,21 +2,18 @@ package com.example.notetakingapp
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import kotlinx.android.synthetic.main.fragment_notes_details.*
-import kotlin.properties.Delegates
 
 
-class NotesDetailsFragment : Fragment(),OnConfirmationDialogeListener {
+class NotesDetailsFragment : Fragment(), OnConfirmationDialogeListener {
 
     lateinit var mainActivityViewModel: MainActivityViewModel
     private var noteId = -1L
@@ -55,7 +52,7 @@ class NotesDetailsFragment : Fragment(),OnConfirmationDialogeListener {
 
     private fun attachObserver() {
         mainActivityViewModel.specificNoteData.observe(viewLifecycleOwner, {
-            if(it!=null) {
+            if (it != null) {
                 et_notes_title?.setText(it?.title)
                 et_description?.setText(it?.content)
                 if (it?.isPinned != null)
@@ -68,8 +65,8 @@ class NotesDetailsFragment : Fragment(),OnConfirmationDialogeListener {
         mainActivityViewModel.imageUriForLoadImage.observe(
             viewLifecycleOwner,
             Observer<String> { item ->
-                if(item!=null)
-                img_attached.setImageURI(Uri.parse(item))
+                if (item != null)
+                    img_attached.setImageURI(Uri.parse(item))
             })
 
         mainActivityViewModel.isSaveButtonClicked.observe(viewLifecycleOwner, {
@@ -99,7 +96,7 @@ class NotesDetailsFragment : Fragment(),OnConfirmationDialogeListener {
                     Toast.makeText(context, "kindly save your Notes before pin", Toast.LENGTH_SHORT)
                         .show()
                 } else if (!isPinned) {
-                    Toast.makeText(context, "Note Pinned Successfully", Toast.LENGTH_SHORT).show()
+                  //  Toast.makeText(context, "Note Pinned Successfully", Toast.LENGTH_SHORT).show()
                     mainActivityViewModel.onUpdatePinStatusNotesDetail(noteId, true)
                     mainActivityViewModel.isPinned.value = true
                     isPinned =true
@@ -113,6 +110,7 @@ class NotesDetailsFragment : Fragment(),OnConfirmationDialogeListener {
             }
         })
     }
+
     private fun showDeleteDialog() {
         MyCustomDialog(this).show(childFragmentManager, "MyCustomDialog")
     }

@@ -3,7 +3,6 @@ package com.example.notetakingapp
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import kotlin.coroutines.coroutineContext
 
 class MainActivityRepo(
     private val application: Application,
@@ -44,6 +43,18 @@ class MainActivityRepo(
         }
     }
 
+    suspend fun getPinnedNotesDetailsCount(
+        isPinned: Boolean,
+        liveData: MutableLiveData<Int>
+    ) {
+        try {
+            val result = notesDao.fetchPinedNotesDetails(isPinned)
+            liveData.postValue(result.size)
+        } catch (e: Exception) {
+            Log.d("=====>", e.toString())
+        }
+    }
+
     suspend fun getSpecificNoteDataFromId(id: Long, liveData: MutableLiveData<NoteDetail>) {
         try {
             val result = notesDao.fetchSpecificNotesDetails(id)
@@ -58,12 +69,11 @@ class MainActivityRepo(
     }
 
     suspend fun updatePinStatus(
-        id: Long,
-        isPinEnable: Boolean,
+        id: Long, isPinEnable: Boolean,
         liveData: MutableLiveData<Long>
     ) {
         try {
-             notesDao.updatePinStatus(id, isPinEnable)
+            notesDao.updatePinStatus(id, isPinEnable)
             liveData.postValue(0L)
         } catch (e: Exception) {
             Log.d("=====>", e.toString())

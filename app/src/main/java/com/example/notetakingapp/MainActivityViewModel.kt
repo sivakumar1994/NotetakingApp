@@ -51,6 +51,9 @@ public class MainActivityViewModel(application : Application) : AndroidViewModel
     var isNeedToShowLongPressEventToolbar = MutableLiveData<Boolean>()
     var isMainMenuDeleteButtonClicked = MutableLiveData<Boolean>()
     var isDeleteConfirmButtonClicked = MutableLiveData<Boolean>()
+    var pinnedNotesCount = MutableLiveData<Int>()
+
+    var pinId= -1L;
 
 
      fun onInsertNotesDetail() {
@@ -98,11 +101,25 @@ public class MainActivityViewModel(application : Application) : AndroidViewModel
     }
 
     fun onUpdatePinStatusNotesDetail(id : Long, isPinEnable: Boolean) :LiveData<Long> {
-        viewModelScope.launch (Dispatchers.IO) {
-            mainActivityRepo.updatePinStatus(id,isPinEnable,isPinnedStatusUpdated)
+        if(!isPinEnable) {
+            viewModelScope.launch(Dispatchers.IO) {
+                mainActivityRepo.updatePinStatus(id, isPinEnable, isPinnedStatusUpdated)
+            }
+        } else {
+            pinId = id
+            viewModelScope.launch(Dispatchers.IO) {
+                mainActivityRepo.getPinnedNotesDetailsCount(true,pinnedNotesCount)
+            }
         }
-        return isPinnedStatusUpdated
+            return isPinnedStatusUpdated
     }
+
+    fun onUpdatePinStatus() {
+        viewModelScope.launch(Dispatchers.IO) {
+            mainActivityRepo.updatePinStatus(pinId, true, isPinnedStatusUpdated)
+        }
+    }
+
 
     fun getPinnedNotesDetail(isPinned : Boolean): LiveData<List<NoteDetail>> {
         viewModelScope.launch (Dispatchers.IO){

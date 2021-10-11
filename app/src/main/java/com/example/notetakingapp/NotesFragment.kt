@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.notetakingapp.utils.SharedPreferenceHelper
 import kotlinx.android.synthetic.main.fragment_notes.*
 
 class NotesFragment : Fragment(), OnNotesItemClickListener {
@@ -54,7 +55,13 @@ class NotesFragment : Fragment(), OnNotesItemClickListener {
             if(!it.isEmpty()) {
                 rv_notes_list.visibility =View.VISIBLE
                 tv_others.visibility =View.VISIBLE
-                adapter?.updateList(it as ArrayList<NoteDetail>)
+
+                if(!SharedPreferenceHelper(requireContext()).getNotesOrderPref()) {
+                    val it1 = it.reversed()
+                    adapter?.updateList(it1 as ArrayList<NoteDetail>)
+                } else {
+                    adapter?.updateList(it as ArrayList<NoteDetail>)
+                }
             } else {
                 rv_notes_list.visibility =View.GONE
                 tv_others.visibility =View.GONE
@@ -64,7 +71,13 @@ class NotesFragment : Fragment(), OnNotesItemClickListener {
             if(!it.isEmpty()) {
                 rv_notes_pinned_list.visibility =View.VISIBLE
                 tv_pinned.visibility =View.VISIBLE
-                notePinnedAdapter?.updateList(it as ArrayList<NoteDetail>)
+                if(!SharedPreferenceHelper(requireContext()).getNotesOrderPref()) {
+                    val it1 = it.reversed()
+                    notePinnedAdapter?.updateList(it1 as ArrayList<NoteDetail>)
+                } else {
+                    notePinnedAdapter?.updateList(it as ArrayList<NoteDetail>)
+                }
+
             } else {
                 rv_notes_pinned_list.visibility =View.GONE
                 tv_pinned.visibility =View.GONE
