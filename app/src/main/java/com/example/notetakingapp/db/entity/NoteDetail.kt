@@ -22,8 +22,6 @@ class NoteDetail(
     var isPinned: Boolean = false,
     @ColumnInfo(name = "isSynced")
     var isSynced: Boolean = false,
-    @ColumnInfo(name = "isLongPressed")
-    var isLongPressed :Boolean = false,
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0

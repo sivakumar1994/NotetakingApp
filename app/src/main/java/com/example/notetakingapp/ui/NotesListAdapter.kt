@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.row_note_list_adapter.view.*
 
 class NotesListAdapter(private var listener: OnNotesItemClickListener) :
     RecyclerView.Adapter<NotesListAdapter.NotesListViewHolder>() {
-    private var noteDetailList: ArrayList<NoteDetail>? = null
+    private var noteDetailList: List<NoteDetail>? = null
     var context: Context? = null
     private var selectedPos = -1
 
@@ -94,7 +94,7 @@ class NotesListAdapter(private var listener: OnNotesItemClickListener) :
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateList(noteDetailListUpdated: ArrayList<NoteDetail>) {
+    fun updateList(noteDetailListUpdated: List<NoteDetail>) {
         noteDetailList = noteDetailListUpdated
         selectedPos = -1
         notifyDataSetChanged()
