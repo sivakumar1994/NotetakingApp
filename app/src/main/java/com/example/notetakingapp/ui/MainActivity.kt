@@ -1,4 +1,4 @@
-package com.example.notetakingapp
+package com.example.notetakingapp.ui
 
 import android.app.Activity
 import android.content.Context
@@ -12,7 +12,6 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
@@ -21,8 +20,8 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.example.notetakingapp.CameraConstant.REQ_CAPTURE
-import com.example.notetakingapp.CameraConstant.RES_IMAGE
+import com.example.notetakingapp.utils.CameraConstant.REQ_CAPTURE
+import com.example.notetakingapp.utils.CameraConstant.RES_IMAGE
 import com.olam.farmapp.utils.compressImageFile
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_notes_details.*
@@ -35,10 +34,9 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.lang.reflect.Field
 import java.lang.reflect.Method
-import android.R.attr.data
-
-
-
+import com.example.notetakingapp.*
+import com.example.notetakingapp.listener.OnConfirmationDialogeListener
+import com.example.notetakingapp.ui.viewmodel.MainActivityViewModel
 
 
 class MainActivity : AppCompatActivity(), OnConfirmationDialogeListener {

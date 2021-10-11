@@ -1,4 +1,4 @@
-package com.example.notetakingapp
+package com.example.notetakingapp.utils
 
 object Constants {
     const val NEW_NOTE_CREATION = "new_note_creation"

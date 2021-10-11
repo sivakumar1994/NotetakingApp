@@ -1,4 +1,4 @@
-package com.example.notetakingapp
+package com.example.notetakingapp.listener
 
 interface OnConfirmationDialogeListener {
     fun onConfirm()

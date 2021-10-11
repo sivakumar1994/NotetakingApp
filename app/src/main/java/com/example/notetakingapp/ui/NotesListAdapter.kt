@@ -1,4 +1,4 @@
-package com.example.notetakingapp
+package com.example.notetakingapp.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.notetakingapp.R
+import com.example.notetakingapp.db.entity.NoteDetail
+import com.example.notetakingapp.listener.OnNotesItemClickListener
 import com.example.notetakingapp.utils.AppUtils
 import kotlinx.android.synthetic.main.row_note_list_adapter.view.*
 

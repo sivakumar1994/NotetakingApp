@@ -1,4 +1,4 @@
-package com.example.notetakingapp
+package com.example.notetakingapp.utils
 
 object CameraConstant {
     const val REQ_CAPTURE =100

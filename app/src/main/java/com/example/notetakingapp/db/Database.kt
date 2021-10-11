@@ -1,8 +1,10 @@
-package com.example.notetakingapp
+package com.example.notetakingapp.db
 
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.notetakingapp.db.entity.NoteDetail
+import com.example.notetakingapp.db.dao.NotesDao
 
 @androidx.room.Database(
     entities = [

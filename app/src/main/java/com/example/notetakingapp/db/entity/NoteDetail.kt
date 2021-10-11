@@ -1,10 +1,10 @@
-package com.example.notetakingapp
+package com.example.notetakingapp.db.entity
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.example.notetakingapp.utils.Constants
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

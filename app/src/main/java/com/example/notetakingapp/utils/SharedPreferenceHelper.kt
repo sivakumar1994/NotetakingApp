@@ -1,9 +1,8 @@
 package com.example.notetakingapp.utils
 
-import android.app.Application
 import android.content.Context
-import com.example.notetakingapp.Constants.APP_PREF
-import com.example.notetakingapp.Constants.SHARED_PREF_NOTES_STORED_ORDER
+import com.example.notetakingapp.utils.Constants.APP_PREF
+import com.example.notetakingapp.utils.Constants.SHARED_PREF_NOTES_STORED_ORDER
 
 class SharedPreferenceHelper(var application: Context) {
 

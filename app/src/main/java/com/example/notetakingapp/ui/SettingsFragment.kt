@@ -1,12 +1,12 @@
-package com.example.notetakingapp
+package com.example.notetakingapp.ui
 
-import android.app.backup.SharedPreferencesBackupHelper
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
+import com.example.notetakingapp.R
 import com.example.notetakingapp.utils.SharedPreferenceHelper
 import kotlinx.android.synthetic.main.fragment_settings.*
 

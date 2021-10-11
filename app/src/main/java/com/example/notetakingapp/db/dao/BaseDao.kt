@@ -1,4 +1,4 @@
-package com.example.notetakingapp
+package com.example.notetakingapp.db.dao
 
 import androidx.room.Delete
 import androidx.room.Insert

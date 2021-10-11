@@ -1,4 +1,4 @@
-package com.example.notetakingapp
+package com.example.notetakingapp.ui
 
 import android.net.Uri
 import android.os.Bundle
@@ -10,6 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
+import com.example.notetakingapp.ui.viewmodel.MainActivityViewModel
+import com.example.notetakingapp.listener.OnConfirmationDialogeListener
+import com.example.notetakingapp.R
 import kotlinx.android.synthetic.main.fragment_notes_details.*
 
 

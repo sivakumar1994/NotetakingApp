@@ -1,8 +1,12 @@
-package com.example.notetakingapp
+package com.example.notetakingapp.repository
 
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.example.notetakingapp.db.Database
+import com.example.notetakingapp.db.entity.NoteDetail
+import com.example.notetakingapp.db.dao.NotesDao
+import com.example.notetakingapp.endpoint.WebEndPoint
 
 class MainActivityRepo(
     private val application: Application,

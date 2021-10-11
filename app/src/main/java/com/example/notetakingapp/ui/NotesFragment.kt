@@ -1,4 +1,4 @@
-package com.example.notetakingapp
+package com.example.notetakingapp.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +8,10 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.notetakingapp.ui.viewmodel.MainActivityViewModel
+import com.example.notetakingapp.listener.OnNotesItemClickListener
+import com.example.notetakingapp.R
+import com.example.notetakingapp.db.entity.NoteDetail
 import com.example.notetakingapp.utils.SharedPreferenceHelper
 import kotlinx.android.synthetic.main.fragment_notes.*
 

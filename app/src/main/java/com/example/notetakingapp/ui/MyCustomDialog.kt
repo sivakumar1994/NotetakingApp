@@ -1,10 +1,13 @@
-package com.example.notetakingapp
+package com.example.notetakingapp.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import com.example.notetakingapp.utils.Constants
+import com.example.notetakingapp.R
+import com.example.notetakingapp.listener.OnConfirmationDialogeListener
 import kotlinx.android.synthetic.main.custom_dialog_fragment.view.*
 
 class MyCustomDialog(var listener: OnConfirmationDialogeListener?, var onclick: () -> Unit = {}) :

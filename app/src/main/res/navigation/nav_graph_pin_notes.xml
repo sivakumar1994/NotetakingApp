@@ -5,12 +5,12 @@
     android:id="@+id/nav_graph_pin_notes">
     <fragment
         android:id="@+id/noteFragmentDest"
-        android:name="com.example.notetakingapp.NotesFragment"
+        android:name="com.example.notetakingapp.ui.NotesFragment"
         tools:layout="@layout/fragment_notes">
 
         <!--<argument
             android:name="notesDetails"
-            app:argType="com.example.notetakingapp.NoteDetail"
+            app:argType="com.example.notetakingapp.db.entity.NoteDetail"
             />-->
         <argument
             android:name="notesId"
@@ -27,23 +27,23 @@
     </fragment>
     <fragment
         android:id="@+id/notesDetailsFragmentDest"
-        android:name="com.example.notetakingapp.NotesDetailsFragment"
+        android:name="com.example.notetakingapp.ui.NotesDetailsFragment"
         tools:layout="@layout/fragment_notes_details">
         <!--<argument
             android:name="notesDetails"
-            app:argType="com.example.notetakingapp.NoteDetail"/>
+            app:argType="com.example.notetakingapp.db.entity.NoteDetail"/>
 
         <action
             android:id="@+id/action_notesDetailsFragmentDest_to_noteFragmentDest"
             app:destination="@id/noteFragmentDest" >
         <argument
             android:name="notesDetails"
-            app:argType="com.example.notetakingapp.NoteDetail"/>
+            app:argType="com.example.notetakingapp.db.entity.NoteDetail"/>
         </action>-->
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.notetakingapp.SettingsFragment"
+        android:name="com.example.notetakingapp.ui.SettingsFragment"
         tools:layout="@layout/fragment_settings">
 
     </fragment>

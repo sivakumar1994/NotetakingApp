@@ -1,4 +1,4 @@
-package com.example.notetakingapp
+package com.example.notetakingapp.ui.viewmodel
 
 import android.Manifest
 import android.app.Application
@@ -7,8 +7,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.notetakingapp.NoteTakingApplication
+import com.example.notetakingapp.db.entity.NoteDetail
+import com.example.notetakingapp.repository.MainActivityRepo
 import com.example.notetakingapp.utils.AppUtils
-import com.olam.farmapp.utils.getTimestampString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
